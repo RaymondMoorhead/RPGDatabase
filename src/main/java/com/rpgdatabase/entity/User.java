@@ -2,14 +2,27 @@ package com.rpgdatabase.entity;
 
 import java.util.ArrayList;
 
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.Id;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope(value = "session", proxyMode=ScopedProxyMode.TARGET_CLASS)
 public class User {
 	@Id
 	public String username;
 	public String password;
 	public String email;
 	public ArrayList<String> characterIds;
+
+	public User() {
+		super();
+		this.username = "DefaultUsername";
+		this.password = "DefaultPassword";
+		this.email = "DefaultEmail";
+		characterIds = new ArrayList<String>();
+	}
 
 	public User(String username, String password, String email, ArrayList<String> characterIds) {
 		super();
@@ -35,5 +48,12 @@ public class User {
 	}
 	public ArrayList<String> getCharacterIds() {
 		return characterIds;
+	}
+	
+	public void copy(User user) {
+		this.username = user.username;
+		this.password = user.password;
+		this.email = user.email;
+		this.characterIds = user.characterIds;
 	}
 }

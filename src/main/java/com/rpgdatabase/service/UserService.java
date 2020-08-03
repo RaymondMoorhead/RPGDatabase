@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rpgdatabase.entity.User;
+import com.rpgdatabase.exception.BadDecryptException;
 import com.rpgdatabase.repo.UserRepository;
 import com.rpgdatabase.security.Encrypt;
 
@@ -31,7 +32,7 @@ public class UserService {
 	public boolean validateUser(String username, String password) {
 		// a temporary measure
 		User user = repository.findByUsername(username);
- 		return (user != null) && user.getPassword().equals(morphPassword(password, user.getUsername()));
+ 		return (user != null) && user.getPassword().equals(morphPassword(user.getUsername(), password));
 	}
 	
 	public User createUser(String username, String password, String email) {
@@ -43,15 +44,40 @@ public class UserService {
 		else if((error = validatePasswordStrength(password)) != null)
 			return null;
 		
-		User user = new User(username, morphPassword(password, username), email, new ArrayList<String>());
+		User user = new User(username, password, email, new ArrayList<String>());
+		user = encryptUser(user);
 		repository.save(user);
 		return user;
 	}
 	
+	public User getUser(String username, String password) {
+		User user = repository.findByUsername(username);
+		if((user != null) && user.getPassword().equals(morphPassword(user.getUsername(), password)))
+			return decryptUser(user);
+		else
+			return null;
+	}
+	
 	// PRIVATE METHODS FOR VALIDATION PURPOSES
 	
+	private User encryptUser(User user) {
+		user.password = morphPassword(user.username, user.password);
+		user.email = Encrypt.encrypt(user.email, user.username);
+		return user;
+	}
+	
+	private User decryptUser(User user) {
+		try {
+			user.password = null; // for security purposes, we needed it earlier, not anymore
+			user.email = Encrypt.decrypt(user.email, user.username);
+		} catch (BadDecryptException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
 	private String morphPassword(String username, String password) {
-		return Encrypt.encrypt(password, username, password, maxPasswordLength);
+		return Encrypt.encryptIrreversable(password, username, password, maxPasswordLength);
 	}
 	
 	// returns null if everything is fine, otherwise returns the error

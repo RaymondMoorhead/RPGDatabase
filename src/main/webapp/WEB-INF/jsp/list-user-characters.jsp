@@ -3,10 +3,11 @@
 <html>
 
 <head>
-<title>RPG Database ${name}'s Characters</title>
+<title>RPG Database ${curUser.username}'s Characters</title>
 </head>
 
 <body>
+	<div><a class="button" href="/account-details">Account Details</a></div>
 	<div class="container">
 		<table border="1">
 			<thead>

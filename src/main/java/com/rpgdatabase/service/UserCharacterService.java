@@ -28,6 +28,11 @@ public class UserCharacterService {
 		return character;
 	}
 	
+	public void deleteCharacter(String id) {
+
+		repository.deleteById(id);
+	}
+	
 	public UserCharacter getCharacter(String id) {
 
 		Optional<UserCharacter> result = repository.findById(id);

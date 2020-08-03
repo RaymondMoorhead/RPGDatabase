@@ -17,6 +17,10 @@ public class RegisterController {
 	
 	@GetMapping(value = "/register")
 	public String showRegisterPage(ModelMap model){
+		model.put("maxUsernameLength", service.maxUsernameLength);
+		model.put("maxPasswordLength", service.maxPasswordLength);
+		model.put("maxEmailLength", service.maxEmailLength);
+		model.put("highestMaxLength", Math.max(Math.max(service.maxUsernameLength, service.maxPasswordLength), service.maxEmailLength));
 		return "register";
 	}
 	

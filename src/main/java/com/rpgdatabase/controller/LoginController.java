@@ -16,6 +16,9 @@ public class LoginController {
 	
 	@GetMapping(value = "/login")
 	public String showLoginPage(ModelMap model){
+		model.put("maxUsernameLength", service.maxUsernameLength);
+		model.put("maxPasswordLength", service.maxPasswordLength);
+		model.put("highestMaxLength", Math.max(service.maxUsernameLength, service.maxPasswordLength));
 		return "login";
 	}
 	

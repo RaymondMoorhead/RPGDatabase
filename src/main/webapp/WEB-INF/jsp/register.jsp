@@ -12,19 +12,19 @@
   			<tr>
     			<td>Username:</td>
    				<td>
-      				<input type = "text" name = "name" size = "20">
+      				<input type = "text" name = "name" maxlength="${maxUsernameLength}" size = "${highestMaxLength}">
     			</td>
   			</tr>
  			 <tr>
     			<td>Password:</td>
     			<td>
-      				<input type = "password" name = "password" size = "20">
+      				<input type = "password" name = "password" maxlength="${maxPasswordLength}" size = "${highestMaxLength}">
    				</td>
  			 </tr>
  			 <tr>
  				<td>Email:</td>
     			<td>
-      				<input type = "email" name = "email" size = "40">
+      				<input type = "email" name = "email" maxlength="${maxEmailLength}" size = "${highestMaxLength}">
    				</td>
  			 </tr>
 	</table>

@@ -34,7 +34,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "{username:" + username + ", password:" + password + ", email:" + email + "}";
+		return "{username:" + username + ", password:" + password + ", email:" + email + ", numCharacters:" + characterIds.size() + "}";
 	}
 	
 	public String getUsername() {
@@ -48,6 +48,13 @@ public class User {
 	}
 	public ArrayList<String> getCharacterIds() {
 		return characterIds;
+	}
+	
+	public void clear() {
+		this.username = null;
+		this.password = null;
+		this.email = null;
+		this.characterIds = null;
 	}
 	
 	public void copy(User user) {

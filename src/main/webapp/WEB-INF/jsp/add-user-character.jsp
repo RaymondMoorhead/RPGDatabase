@@ -15,6 +15,12 @@
       				<input type = "text" name = "characterName" size = "50">
    				</td>
  			 </tr>
+ 			 <tr>
+    			<td>Character Bio:</td>
+    			<td>
+      				<input type = "text" name = "characterBio" size = "50">
+   				</td>
+ 			 </tr>
 	</table>
 	<p><input type = "submit" value = "submit" name = "b1"></p>
 	</form>

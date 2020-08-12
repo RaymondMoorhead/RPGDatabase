@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.rpgdatabase.entity.User;
 import com.rpgdatabase.service.UserService;
@@ -28,12 +29,12 @@ public class LoginController {
 		model.put("maxUsernameLength", service.maxUsernameLength);
 		model.put("maxPasswordLength", service.maxPasswordLength);
 		model.put("highestMaxLength", Math.max(service.maxUsernameLength, service.maxPasswordLength));
-		System.out.println("Starting login, user is: " + (curUser == null ? "NULL" : curUser.toString()));
+		curUser.clear();
 		return "login";
 	}
 	
 	@PostMapping(value = "/login")
-	public String showCharactersPage(ModelMap model, @RequestParam String name, @RequestParam String password){
+	public ModelAndView showCharactersPage(ModelMap model, @RequestParam String name, @RequestParam String password){
 		
 		// cleanup
 		model.remove("maxUsernameLength");
@@ -43,15 +44,16 @@ public class LoginController {
 		User user = service.getUser(name, password);
 		
 		if (user == null) {
-			System.out.println("Login failed, user is: " + (curUser == null ? "NULL" : curUser.toString()));
+			System.out.println("Login failed");
 			model.put("errorMessage", "Invalid Credentials");
-			return "login";
+			return new ModelAndView("redirect:/login");
 		}
 		curUser.copy(user);
 		model.put("name", name);
 		
 		System.out.println("Login Succeeded, user is: " + (curUser == null ? "NULL" : curUser.toString()));
 		
-		return "list-user-characters";
+		//return "list-user-characters";
+		return new ModelAndView("redirect:/list-user-characters");
 	}
 }

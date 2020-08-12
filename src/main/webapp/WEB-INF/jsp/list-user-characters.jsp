@@ -9,32 +9,41 @@
 <body>
 	<div><a class="button" href="/account-details">Account Details</a></div>
 	<div class="container">
-		<table border="1">
-			<thead>
-				<tr>
-					<th>name</th>
-					<th>features</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${characters}" var="character">
-					<tr>
-						<td>${character.name}</td>
-						<td>
-						<c:forEach items="${character.features}" var="feat">
-							${feat.key}<br>
+		<c:choose>
+			<c:when test="${empty characters}">
+				<h3>No Characters</h3>
+			</c:when>
+			<c:otherwise>
+				<table border="1">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Bio</th>
+							<th>Features</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${characters}" var="character">
+							<tr>
+								<td>${character.name}</td>
+								<td>${character.bio}</td>
+								<td>
+								<c:forEach items="${character.features}" var="feat">
+									${feat.key}<br>
+								</c:forEach>
+								</td>
+								<td><a type="button" class="btn btn-success"
+									href="/view-user-character?id=${character.id}">View</a></td>
+								<td><a type="button" class="btn btn-warning"
+									href="/delete-user-character?id=${character.id}">Delete</a></td>
+							</tr>
 						</c:forEach>
-						</td>
-						<td><a type="button" class="btn btn-success"
-							href="/view-user-character?id=${character.id}">View</a></td>
-						<td><a type="button" class="btn btn-warning"
-							href="/delete-user-character?id=${character.id}">Delete</a></td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+					</tbody>
+				</table>
+			</c:otherwise>
+		</c:choose>
 		<div>
 			<a class="button" href="/add-user-character">Make A New Character</a>
 		</div>

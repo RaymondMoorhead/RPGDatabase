@@ -6,13 +6,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rpgdatabase.entity.User;
 import com.rpgdatabase.entity.UserCharacter;
 import com.rpgdatabase.repo.UserCharacterRepository;
+import com.rpgdatabase.repo.UserRepository;
 
 @Service
 public class UserCharacterService {
 	@Autowired
-	private UserCharacterRepository repository;
+	private UserCharacterRepository charRepository;
+	@Autowired
+	private UserRepository userRepository;
 	private String error = null;
 	
 	public String getError() {
@@ -21,21 +25,35 @@ public class UserCharacterService {
 		return temp;
 	}
 	
-	public UserCharacter createCharacter(String username, String characterName) {
+	public UserCharacter createCharacter(String username, String characterName, String characterBio) {
 
-		UserCharacter character = new UserCharacter(username, characterName);
-		repository.save(character);
+		UserCharacter character = new UserCharacter(username, characterName, characterBio);
+		charRepository.insert(character);
+		
+		User user = userRepository.findByUsername(username);
+		user.characterIds.add(character.getId());
+		userRepository.save(user);
+		
 		return character;
+	}
+	
+	public void updateCharacter(UserCharacter character) {
+		charRepository.save(character);
 	}
 	
 	public void deleteCharacter(String id) {
 
-		repository.deleteById(id);
+		Optional<UserCharacter> character = charRepository.findById(id);
+		charRepository.deleteById(id);
+		
+		User user = userRepository.findByUsername(character.get().getCreatorName());
+		user.characterIds.remove(character.get().getId());
+		userRepository.save(user);
 	}
 	
 	public UserCharacter getCharacter(String id) {
 
-		Optional<UserCharacter> result = repository.findById(id);
+		Optional<UserCharacter> result = charRepository.findById(id);
 		if(result.isPresent())
 			return result.get();
 		else
@@ -44,6 +62,6 @@ public class UserCharacterService {
 	
 	public List<UserCharacter> getCharacters(String creatorName) {
 
-		return repository.findAllByCreatorName(creatorName);
+		return charRepository.findAllByCreatorName(creatorName);
 	}
 }

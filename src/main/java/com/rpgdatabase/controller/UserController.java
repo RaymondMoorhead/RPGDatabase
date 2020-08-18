@@ -1,5 +1,7 @@
 package com.rpgdatabase.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,12 +15,10 @@ import com.rpgdatabase.service.UserService;
 public class UserController {
 	@Autowired
 	UserService service;
-	@Autowired
-    private User curUser;
 	
     @ModelAttribute("curUser")
-    public User getCurUser() {
-        return this.curUser;
+    public User getCurUser(HttpSession session) {
+        return (User) session.getAttribute("curUser");
     }
 	
 //	@GetMapping(value = "/account-details")
@@ -28,7 +28,8 @@ public class UserController {
 //	}
 	
 	@GetMapping(value = "/account-details")
-	public String showReVerifyPage(ModelMap model){
+	public String showReVerifyPage(ModelMap model, HttpSession session){
+		User curUser = getCurUser(session);
 		System.out.println("Starting account-details, user is: " + (curUser == null ? "NULL" : curUser.toString()));
 		return "account-details";
 	}

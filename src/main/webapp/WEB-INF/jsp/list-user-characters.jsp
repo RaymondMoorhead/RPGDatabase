@@ -3,10 +3,13 @@
 <html>
 
 <head>
+<link rel="stylesheet" type="text/css" href="formats.css">
 <title>RPG Database ${curUser.username}'s Characters</title>
 </head>
 
 <body>
+	<%@ include file = "header.jsp"%>
+	
 	<div><a class="button" href="/account-details">Account Details</a></div>
 	<div class="container">
 		<c:choose>
@@ -48,10 +51,8 @@
 			<a class="button" href="/add-user-character">Make A New Character</a>
 		</div>
 	</div>
-	<!-- 
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	-->
+	
+	<%@ include file = "footer.jsp"%>
 
 </body>
 

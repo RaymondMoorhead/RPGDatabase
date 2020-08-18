@@ -1,11 +1,12 @@
 <html>
 
 <head>
+<link rel="stylesheet" type="text/css" href="formats.css">
 <title>RPG Database Create Character</title>
 </head>
 
 <body>
-	<font color="red">${errorMessage}</font>
+	<%@ include file = "header.jsp"%>
 	
 	<form method = "post">
 		<table border="1">
@@ -18,12 +19,15 @@
  			 <tr>
     			<td>Character Bio:</td>
     			<td>
-      				<input type = "text" name = "characterBio" size = "50">
+      				<textarea name = "characterBio" rows="4" cols="50">
+      				</textarea>
    				</td>
  			 </tr>
 	</table>
 	<p><input type = "submit" value = "submit" name = "b1"></p>
 	</form>
+	
+	<%@ include file = "footer.jsp"%>
 </body>
 
 </html>

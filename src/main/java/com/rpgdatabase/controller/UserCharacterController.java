@@ -2,6 +2,8 @@ package com.rpgdatabase.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,17 +20,15 @@ import com.rpgdatabase.service.UserCharacterService;
 public class UserCharacterController {
 	@Autowired
 	UserCharacterService service;
-	@Autowired
-    private User curUser;
-	
+
     @ModelAttribute("curUser")
-    public User getCurUser() {
-        return this.curUser;
+    public User getCurUser(HttpSession session) {
+        return (User) session.getAttribute("curUser");
     }
 	
 	@GetMapping(value = "/list-user-characters")
-	public String showCharactersPage(ModelMap model){
-		List<UserCharacter> characters = service.getCharacters(curUser.getUsername());
+	public String showCharactersPage(ModelMap model, HttpSession session){
+		List<UserCharacter> characters = service.getCharacters(getCurUser(session).getUsername());
 		model.put("characters", characters);
 		return "list-user-characters";
 	}
@@ -39,8 +39,8 @@ public class UserCharacterController {
 	}
 	
 	@PostMapping(value = "/add-user-character")
-	public String addCharacter(@RequestParam String characterName, @RequestParam String characterBio){
-		service.createCharacter(curUser.getUsername(), characterName, characterBio);
+	public String addCharacter(HttpSession session, @RequestParam String characterName, @RequestParam String characterBio){
+		service.createCharacter(getCurUser(session).getUsername(), characterName, characterBio);
 		return "redirect:list-user-characters";
 	}
 	
@@ -122,19 +122,4 @@ public class UserCharacterController {
 		service.updateCharacter(character);
 		return "redirect:view-user-character?id=" + id;
 	}
-	
-//	@PostMapping(value = "/edit-character")
-//	public String showWelcomePage(ModelMap model, @RequestParam String name, @RequestParam String password, @RequestParam String email){
-//		
-//		User user = service.createUser(name, password, email);
-//		
-//		if (user == null) {
-//			model.put("errorMessage", service.getError());
-//			return "register";
-//		}
-//		
-//		model.put("name", name);
-//		
-//		return "welcome";
-//	}
 }

@@ -1,0 +1,34 @@
+@charset "ISO-8859-1";
+
+body {
+	text-align: center;
+	width: 50%;
+	left: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header {
+	width: 100%;
+	left: 0%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	position: fixed;
+  	top: 0;
+}
+
+.footer {
+	width: 100%;
+	left: 0%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	position: fixed;
+  	bottom: 0;
+}

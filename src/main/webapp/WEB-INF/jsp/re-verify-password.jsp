@@ -1,11 +1,12 @@
 <html>
 
 <head>
+<link rel="stylesheet" type="text/css" href="formats.css">
 <title>RPG Database Re-Verification</title>
 </head>
 
 <body>
-	<font color="red">${errorMessage}</font>
+	<%@ include file = "header.jsp"%>
 	
 	<h4>Please Re-Verify Your Authenticity</h4>
 	
@@ -20,6 +21,8 @@
 	</table>
 	<p><input type = "submit" value = "submit" name = "b1"></p>
 	</form>
+	
+	<%@ include file = "footer.jsp"%>
 </body>
 
 </html>

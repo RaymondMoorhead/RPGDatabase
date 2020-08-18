@@ -1,11 +1,11 @@
 <html>
 
 <head>
+<link rel="stylesheet" type="text/css" href="formats.css">
 <title>RPG Database Registration</title>
 </head>
 
-<body>
-	<font color="red">${errorMessage}</font>
+<body>>
 	
 	<form method = "post">
 		<table border="1">
@@ -32,6 +32,7 @@
 	</form>
 	
 	<a href="login">Already have an account? Click Here!</a>
+	<%@ include file = "footer.jsp"%>
 </body>
 
 </html>

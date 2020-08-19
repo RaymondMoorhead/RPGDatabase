@@ -19,8 +19,7 @@
  			 <tr>
     			<td>Character Bio:</td>
     			<td>
-      				<textarea name = "characterBio" rows="4" cols="50">
-      				</textarea>
+      				<textarea name = "characterBio" rows="4" cols="50"></textarea>
    				</td>
  			 </tr>
 	</table>

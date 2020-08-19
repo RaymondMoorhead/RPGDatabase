@@ -7,11 +7,11 @@
 <title>RPG Database ${curUser.username}'s Characters</title>
 </head>
 
-<body>
+<body style="width: 90%">
 	<%@ include file = "header.jsp"%>
 	
 	<div><a class="button" href="/account-details">Account Details</a></div>
-	<div class="container">
+	<div class="container" style="width: 100%">
 		<c:choose>
 			<c:when test="${empty characters}">
 				<h3>No Characters</h3>
@@ -20,11 +20,11 @@
 				<table border="1">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Bio</th>
-							<th>Features</th>
-							<th></th>
-							<th></th>
+							<th style="width:10%">Name</th>
+							<th style="width:70%">Bio</th>
+							<th style="width:10%">Features</th>
+							<th style="width:5%"></th>
+							<th style="width:5%"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -34,7 +34,7 @@
 								<td>${character.bio}</td>
 								<td>
 								<c:forEach items="${character.features}" var="feat">
-									${feat.key}<br>
+									${feat.name}<br>
 								</c:forEach>
 								</td>
 								<td><a type="button" class="btn btn-success"

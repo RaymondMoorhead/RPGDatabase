@@ -5,7 +5,7 @@
 <title>RPG Database Registration</title>
 </head>
 
-<body>>
+<body>
 	
 	<form method = "post">
 		<table border="1">

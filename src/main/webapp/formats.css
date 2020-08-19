@@ -13,14 +13,27 @@ table {
   margin-right: auto;
 }
 
+.container {
+	width: 90%;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.fill-cell {
+	width: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: relative;
+}
+
 .header {
 	width: 100%;
 	left: 0%;
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
-	position: fixed;
-  	top: 0;
 }
 
 .footer {
@@ -29,6 +42,4 @@ table {
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
-	position: fixed;
-  	bottom: 0;
 }

@@ -22,6 +22,12 @@
 		</tr>
 	</table>
 	
+	<table border="1">
+		<tr>
+			<td><a type="button" style="color: red" href="/account-delete">Delete Account</a></td>
+		</tr>
+	</table>
+	
 	<%@ include file = "footer.jsp"%>
 </body>
 

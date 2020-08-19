@@ -10,6 +10,7 @@ import com.rpgdatabase.entity.User;
 import com.rpgdatabase.entity.UserCharacter;
 import com.rpgdatabase.repo.UserCharacterRepository;
 import com.rpgdatabase.repo.UserRepository;
+import com.rpgdatabase.utility.HtmlUtility;
 
 @Service
 public class UserCharacterService {
@@ -49,6 +50,14 @@ public class UserCharacterService {
 		User user = userRepository.findByUsername(character.get().getCreatorName());
 		user.characterIds.remove(character.get().getId());
 		userRepository.save(user);
+	}
+	
+	// does not remove the reference to the character from the User, so
+	// this method should only be called when the User has already been
+	// deleted
+	public void deleteCharactersNoSafety(List<String> ids) {
+		for(String id : ids)
+			charRepository.deleteById(id);
 	}
 	
 	public UserCharacter getCharacter(String id) {

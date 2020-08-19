@@ -12,6 +12,7 @@
 		<h3 class="header">RPG Database</h3><br><br>
 		<a class="button" href = "/logout">Logout</a><br>
 		
+		<font color="orange">${warningMessage}</font>
 		<font color="red">${errorMessage}</font>
 		<font color="green">${successMessage}</font>
 	</div>

@@ -30,9 +30,7 @@ public class UserService {
 	// error is not used here since for security purposes we don't want
 	// to let someone know why it failed, by user existence or password
 	public boolean validateUser(String username, String password) {
-		// a temporary measure
-		User user = repository.findByUsername(username);
- 		return (user != null) && user.getPassword().equals(morphPassword(user.getUsername(), password));
+		return repository.findByUsernameAndPassword(username, morphPassword(username, password)) != null;
 	}
 	
 	public User createUser(String username, String password, String email) {
@@ -47,15 +45,23 @@ public class UserService {
 		User user = new User(username, password, email, new ArrayList<String>());
 		user = encryptUser(user);
 		repository.save(user);
-		return user;
+		return decryptUser(user);
 	}
 	
 	public User getUser(String username, String password) {
-		User user = repository.findByUsername(username);
-		if((user != null) && user.getPassword().equals(morphPassword(user.getUsername(), password)))
+		User user = repository.findByUsernameAndPassword(username, morphPassword(username, password));
+		if(user != null)
 			return decryptUser(user);
+		return user;
+	}
+	
+	public boolean deleteuser(String username, String password) {
+		if(validateUser(username, password)) {
+			repository.deleteById(username);
+			return true;
+		}
 		else
-			return null;
+			return false;
 	}
 	
 	// PRIVATE METHODS FOR VALIDATION PURPOSES

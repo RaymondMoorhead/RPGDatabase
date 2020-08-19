@@ -1,18 +1,22 @@
 package com.rpgdatabase.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
 public class UserCharacter {
+	
+
 
 	@Id
 	public String id;
 	public String creatorName;
 	public String name;
 	public String bio;
-	public Map<String, String> features;
+	public List<Feat> features;
 
 	public UserCharacter(String creatorName, String name, String bio) {
 		super();
@@ -20,7 +24,7 @@ public class UserCharacter {
 		this.creatorName = creatorName;
 		this.name = name;
 		this.bio = bio;
-		this.features = new HashMap<String, String>();
+		this.features = new ArrayList<Feat>();
 	}
 	
 	public String getId() {
@@ -35,7 +39,7 @@ public class UserCharacter {
 	public String getBio() {
 		return bio;
 	}
-	public Map<String, String> getFeatures() {
+	public List<Feat> getFeatures() {
 		return features;
 	}
 	
@@ -46,14 +50,18 @@ public class UserCharacter {
 		this.bio = bio;
 	}
 	
-	public boolean addFeature(String name, String description) {
-		if(features.containsKey(name))
-			return false;
-		features.put(name, description);
-		return true;
+	public void addFeature(String name, String description) {
+		features.add(new Feat(name, description));
 	}
-	public boolean removeFeature(String name) {
-		return features.remove(name) != null;
+	
+	public void changeFeature(int index, String name, String description) {
+		Feat feat = features.get(index);
+		feat.name = name;
+		feat.description = description;
+	}
+	
+	public void removeFeature(int index) {
+		features.remove(index);
 	}
 	
 	@Override

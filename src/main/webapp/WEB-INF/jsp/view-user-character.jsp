@@ -9,6 +9,7 @@
 </head>
 
 <body style="width: 90%">
+
 	<%@ include file = "header.jsp"%>
 
 	<a type="button" class="btn btn-success" href="/list-user-characters">Return To List</a>
@@ -33,7 +34,7 @@
 		<c:when test="${editBio != null}">
 			<form method = "post" action="/edit-user-character-bio">
 				<input type = "hidden" name = "id" value="${character.id}">
-				<textarea name = "bio" rows="4" cols="50">${character.bio}</textarea><br>
+				<textarea name = "bio" id="edited" style="width: 100%">${character.bio}</textarea><br>
 				<input type = "submit" value = "Save" name = "b1">
 			</form>
 		</c:when>
@@ -72,7 +73,7 @@
 										<input type = "hidden" name = "id" value="${character.id}">
 										<input type = "hidden" name = "index" value="${loop.index}">
 										<td><input type = "text" name = "name" value="${feat.name}"></td>
-										<td><textarea name = "desc" class="fill-cell" rows="4">${feat.description}</textarea></td>
+										<td><textarea name = "desc" class="fill-cell" id="edited" style="overflow:hidden">${feat.description}</textarea></td>
 										<td><input type = "submit" value = "Save" name = "b1"></td>
 									</c:when>
 									<c:otherwise>
@@ -97,6 +98,12 @@
 	</div>
 
 	<%@ include file = "footer.jsp"%>
+	
+	<script src="JsUtility.js"></script>
+	<script>
+		textAreaAdjust(document.getElementById("edited"));
+	</script>
+	
 </body>
 
 </html>

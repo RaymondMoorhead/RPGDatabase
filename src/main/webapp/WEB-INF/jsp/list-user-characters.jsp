@@ -30,7 +30,7 @@
 					<tbody>
 						<c:forEach items="${characters}" var="character">
 							<tr>
-								<td>${character.name}</td>
+								<td><h3 style="text-align: center">${character.name}</h3></td>
 								<td>${character.bio}</td>
 								<td>
 								<c:forEach items="${character.features}" var="feat">

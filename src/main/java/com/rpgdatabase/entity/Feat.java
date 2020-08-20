@@ -3,6 +3,8 @@ package com.rpgdatabase.entity;
 public class Feat {
 	public String name;
 	public String description;
+//	public String rollCommand;
+//	public List<Pair<RollCommand, List<String>> > modTargets
 	
 	public Feat(String name, String description) {
 		super();

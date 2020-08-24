@@ -39,8 +39,9 @@ public class Dice {
 			// parse die rolls
 			int dIndex = input.indexOf('d');
 			
-			if(dIndex == -1)
+			if((dIndex == -1) && ((dIndex = input.indexOf('D')) == -1))
 				return false;
+				
 			
 			// parse quantity
 			// this means that "d20" defaults to "1d20"
@@ -82,9 +83,14 @@ public class Dice {
 		int result = 0;
 		
 		while(quantity > 0) {
-			result += rand.nextInt(size) + 1;
+			result += (Math.abs(rand.nextInt()) % size) + 1;
 			--quantity;
 		}
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return (quantity > 0 ? quantity : "") + "d" + size;
 	}
 }

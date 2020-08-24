@@ -1,8 +1,11 @@
 package com.rpgdatabase.utility.dice;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 public class RollCommand {
 	public String value;
-	public RollNode head = null;;
+	public RollNode head;
 
 	public RollCommand(String value) {
 		super();
@@ -23,19 +26,34 @@ public class RollCommand {
 	}
 	
 	public int execute() throws Exception {
-		if(head == null)
-			interpret();
+		if(head == null) {
+			if(value != null)
+				generate();
+			else {
+				System.out.println("RollCommand.execute() called with no value");
+				return 0;
+			}
+		}
 		
-		return head.evaluate();
+		if(head == null) {
+			System.out.println("RollCommand.generate() failed");
+			return 0;
+		}
+		
+	    ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
+	    return (Integer)engine.eval(head.getExpression());
 	}
 	
-	public boolean interpret(String value) {
-		this.value = value;
-		return interpret();
+	public RollNode generate() {
+		return generate(value);
 	}
 	
-	public boolean interpret() {
-		
-		throw new RuntimeException("RollCommand.interpret is not implemented");
+	public RollNode generate(String input) {
+		return head = RollNode.generate(value = input);
+	}
+
+	@Override
+	public String toString() {
+		return value;
 	}
 }

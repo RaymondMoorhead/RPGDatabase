@@ -2,54 +2,89 @@ package com.rpgdatabase.utility.dice;
 
 public class RollNode {
 
-	private RollToken token = null;
+	// only one of these will be used
+	private Dice dice = null;
+	private String math = null;
 	
-	private RollNode left = null, right = null;
-	private Character operation = null;
+	private RollNode next = null;
 	
-	public int getMaxDepth() {
-		if(token != null)
-			return -1;
+	public String getExpression() throws Exception {
+
+		String value = null;
+		if(dice != null)
+			value = Integer.toString(dice.roll());
+		else if(math != null)
+			value = math;
 		else
-			return Math.max(left.getMaxDepth(), right.getMaxDepth()) + 1;
+			throw new Exception("RollNode.getExpression() called on unset node");
+		
+		if(next != null)
+			return value + next.getExpression();
+		else
+			return value;
 	}
 	
-	public int evaluate() throws Exception {
-		if(token != null)
-			return token.getVal();
-		else if(left != null && right != null) {
-			int leftResult = left.evaluate();
-			int rightResult = right.evaluate();
-			
-			switch(operation) {
-				case '+':
-					return leftResult + rightResult;
-				case '-':
-					return leftResult - rightResult;
-				case '*':
-					return leftResult * rightResult;
-				case '/':
-					return leftResult / rightResult;
-				default:
-					throw new Exception("RollNode.evaluate Invalid operation");
-			}
+	public static RollNode generate(String input) {
+		// because the result will be executed as javascript, 
+		// it requires at least a minimum of sanitization
+		if(input.matches(".*[abcefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ;].*")) {
+			System.out.println("suspicious string in RollNode.generate, compilation refused");
+			return null;
 		}
-		else
-			throw new Exception("No data provided");
+		
+		return generateNoSafety(input);
 	}
 	
-	public void setToken(RollToken token) {
-		this.token = token;
-		this.left = null;
-		this.right = null;
-		this.operation = null;
+	private static boolean validDiceChar(char character) {
+		return (('0' <= character) && (character <= '9')) || (character == 'd' || character == 'D');
 	}
 	
-	public void setNodes(RollNode left, RollNode right, Character operation) {
-		this.left = left;
-		this.right = right;
-		this.operation = operation;
-		this.token = null;
+	private static RollNode generateNoSafety(String input) {
+		if(input.isEmpty())
+			return null;
+		
+		RollNode node = new RollNode();
+		
+		// are there any die rolls in the remaining math?
+		int nextDice = input.indexOf('d');
+		if((nextDice == -1) && ((nextDice = input.indexOf('D')) == -1)) {
+			node.math = input;
+			return node;
+		}
+		
+		// if so, find them
+		int start = nextDice;
+		int end = nextDice;
+		
+		while((start > 0) && validDiceChar(input.charAt(start))) {
+			--start;
+		}
+		
+		if(!validDiceChar(input.charAt(start)))
+			++start;
+		
+		// string begins with a dice roll
+		if(start == 0) {
+			while((end < input.length()) && validDiceChar(input.charAt(end))) {
+				++end;
+			}
+			
+			node.dice = new Dice();
+			node.dice.parseDice(input.substring(0, end));
+			node.next = generateNoSafety(input.substring(end));
+		}
+		// string begins with an arithmetic expression
+		else {
+			node.math = input.substring(0, start);
+			node.next = generateNoSafety(input.substring(start));
+		}
+		
+		return node;
+	}
+
+	@Override
+	public String toString() {
+		return (dice != null ? dice.toString() : math) + (next != null ? next.toString() : "");
 	}
 	
 	

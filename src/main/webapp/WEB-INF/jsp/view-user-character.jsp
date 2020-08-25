@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 
@@ -7,6 +7,14 @@
 <link rel="stylesheet" type="text/css" href="formats.css">
 <title>RPG Database ${curUser.username}'s Characters</title>
 </head>
+
+<script language="JavaScript">
+	function rollDice(givenIndex) {
+		var input = character.features.get(index).selfRoll + character.features.get(index).externalMods;
+		var result = com.rpgdatabase.utility.dice.RollCommand.RollCommand.executeOnce(input);
+		document.getElementById("rollResult" + givenIndex.toString()).innerHTML = result;
+	}
+</script>
 
 <body style="width: 90%">
 
@@ -61,31 +69,51 @@
 						<tr>
 							<th>Name</th>
 							<th>Description</th>
+							<th>Roll</th>
+							<th>External Modifiers</th>
+							<th>Roll</th>
+							<th>Roll Result</th>
 							<th></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${character.features}" var="feat" varStatus="loop">
+						<%
+							// varStatus="loop" ${loop.index} stopped working for some
+							// unknown reason, so now I need to manually create my own
+							// index tracker
+							int index = 0;
+							request.setAttribute("index", index);
+						%>
+						<c:forEach items="${character.features}" var="feat">
 							<tr>
 								<c:choose>
-									<c:when test="${editFeat != null && editFeat == loop.index}">
+									<c:when test="${editFeat == index}">
 										<input type = "hidden" name = "id" value="${character.id}">
-										<input type = "hidden" name = "index" value="${loop.index}">
+										<input type = "hidden" name = "index" value="${index}">
 										<td><input type = "text" name = "name" value="${feat.name}"></td>
-										<td><textarea name = "desc" class="fill-cell" id="edited" style="overflow:hidden">${feat.description}</textarea></td>
+										<td><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
+										<td><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
+										<td>${feat.externalMods}</td>
+										<td><button type="button" onclick="rollDice(${index})">Roll</button></td>
+										<td><p id = "rollResult${index}">0</p></td>
 										<td><input type = "submit" value = "Save" name = "b1"></td>
 									</c:when>
 									<c:otherwise>
 										<td>${feat.name}</td>
 										<td>${feat.description}</td>
+										<td>${feat.selfRoll}</td>
+										<td>${feat.externalMods}</td>
+										<td><button type="button" onclick="rollDice(${index})">Roll</button></td>
+										<td><p id = "rollResult${index}">0</p></td>
 										<td><a type="button" class="btn btn-success"
-											href="/edit-user-character-feat?id=${character.id}&index=${loop.index}">Edit</a></td>
+											href="/edit-user-character-feat?id=${character.id}&index=${index}">Edit</a></td>
 									</c:otherwise>
 								</c:choose>
 								<td><a type="button" class="btn btn-warning"
-									href="/delete-user-character-feat?id=${character.id}&index=${loop.index}">Delete</a></td>
+									href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
 							</tr>
+							<%++index; %>
 						</c:forEach>
 					</tbody>
 				</table>
@@ -101,7 +129,8 @@
 	
 	<script src="JsUtility.js"></script>
 	<script>
-		textAreaAdjust(document.getElementById("edited"));
+		textAreaAdjust(document.getElementById("editedDesc"));
+		textAreaAdjust(document.getElementById("editedSelfRoll");
 	</script>
 	
 </body>

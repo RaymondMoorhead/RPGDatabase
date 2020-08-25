@@ -13,7 +13,7 @@
 	<div><a class="button" href="/account-details">Account Details</a></div>
 	<div class="container" style="width: 100%">
 		<c:choose>
-			<c:when test="${empty characters}">
+			<c:when test="${characters == null || empty characters}">
 				<h3>No Characters</h3>
 			</c:when>
 			<c:otherwise>

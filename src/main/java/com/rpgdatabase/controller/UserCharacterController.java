@@ -1,7 +1,6 @@
 package com.rpgdatabase.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.rpgdatabase.entity.Feat;
 import com.rpgdatabase.entity.User;
 import com.rpgdatabase.entity.UserCharacter;
 import com.rpgdatabase.service.UserCharacterService;
@@ -32,9 +30,11 @@ public class UserCharacterController {
 	@GetMapping(value = "/list-user-characters")
 	public String showCharactersPage(ModelMap model, HttpSession session){
 		List<UserCharacter> characters = service.getCharacters(getCurUser(session).getUsername());
-		for(UserCharacter character : characters)
-			formatBio(character);
-		model.put("characters", characters);
+		if(characters != null) {
+			for(UserCharacter character : characters)
+				formatBio(character);
+			model.put("characters", characters);
+		}
 		return "list-user-characters";
 	}
 	
@@ -69,7 +69,7 @@ public class UserCharacterController {
 		UserCharacter character = service.getCharacter(id);
 		formatBio(character);
 		formatFeats(character);
-		character.addFeature("", "");
+		character.addFeature("", "", "");
 		model.put("character", character);
 		model.put("editFeat", character.features.size() - 1);
 		return "view-user-character";
@@ -121,13 +121,13 @@ public class UserCharacterController {
 	}
 	
 	@PostMapping(value = "/edit-user-character-feat")
-	public String saveCharacterFeat(ModelMap model, @RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc){
+	public String saveCharacterFeat(ModelMap model, @RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc, @RequestParam String selfRoll){
 		UserCharacter character = service.getCharacter(id);
 		
 		if(index == character.features.size())
-			character.addFeature(name, desc); // must be a new feature
+			character.addFeature(name, desc, selfRoll); // must be a new feature
 		else
-			character.changeFeature(index, name, desc);
+			character.changeFeature(index, name, desc, selfRoll);
 		
 		service.updateCharacter(character);
 		return "redirect:view-user-character?id=" + id;
@@ -152,11 +152,16 @@ public class UserCharacterController {
 	}
 	
 	private void formatFeats(UserCharacter character, int exceptThisFeatIndex) {
+		character.compileFeatureMods();
 		for(int i = 0; i < character.features.size(); ++i){
+			// ignore formatting a feat (because it' being edited)
 			if(i == exceptThisFeatIndex)
 				continue;
-			else
-				character.features.get(i).description = HtmlUtility.formatForTextArea(character.features.get(i).getDescription());
+
+			// handle feat formatting
+			character.features.get(i).description = HtmlUtility.formatForTextArea(character.features.get(i).getDescription());
 		}
+		
+
 	}
 }

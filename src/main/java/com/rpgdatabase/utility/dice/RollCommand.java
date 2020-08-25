@@ -2,10 +2,16 @@ package com.rpgdatabase.utility.dice;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 public class RollCommand {
 	public String value;
 	public RollNode head;
+	private static ScriptEngine engine;
+	
+	static {
+		engine = new ScriptEngineManager().getEngineByName("graal.js");
+	}
 
 	public RollCommand(String value) {
 		super();
@@ -40,9 +46,21 @@ public class RollCommand {
 			return 0;
 		}
 		
-	    ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
 	    return (Integer)engine.eval(head.getExpression());
 	}
+	
+	// this method should almost never be used, because compiling
+	// a command just to execute it once is slow and terrible,
+	// but JavaScipt demands to have only the worst at its grimy
+	// hag-like fingertips, so here we are.
+	public static int executeOnce(String input) throws Exception {
+		RollNode node = RollNode.generate(input);
+		if(node == null)
+			return -1;
+		else
+			return (Integer)engine.eval(node.getExpression());
+	}
+	public static String getFive() { return "5";}
 	
 	public RollNode generate() {
 		return generate(value);

@@ -35,7 +35,7 @@ public class UserService {
 	
 	public User createUser(String username, String password, String email) {
 		// check for existing user
-		if(repository.findByUsername(username) != null) {
+		if(repository.existsByUsername(username)) {
 			error = "Username already exists";
 			return null;
 		}
@@ -53,6 +53,10 @@ public class UserService {
 		if(user != null)
 			return decryptUser(user);
 		return user;
+	}
+	
+	public boolean doesUserExist(String username) {
+		return repository.existsByUsername(username);
 	}
 	
 	public boolean deleteuser(String username, String password) {

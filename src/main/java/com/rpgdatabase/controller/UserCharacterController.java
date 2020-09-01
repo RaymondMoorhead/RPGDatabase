@@ -16,6 +16,7 @@ import com.rpgdatabase.entity.User;
 import com.rpgdatabase.entity.UserCharacter;
 import com.rpgdatabase.service.UserCharacterService;
 import com.rpgdatabase.utility.HtmlUtility;
+import com.rpgdatabase.utility.TestData;
 
 @Controller
 public class UserCharacterController {
@@ -25,6 +26,12 @@ public class UserCharacterController {
     @ModelAttribute("curUser")
     public User getCurUser(HttpSession session) {
         return (User) session.getAttribute("curUser");
+    }
+    
+    // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
+    @GetMapping(value = "create-test-character")
+    public void createTestCharacter() {
+    	TestData.createTestCharacter(service);
     }
 	
 	@GetMapping(value = "/list-user-characters")

@@ -60,7 +60,6 @@ public class RollCommand {
 		else
 			return (Integer)engine.eval(node.getExpression());
 	}
-	public static String getFive() { return "5";}
 	
 	public RollNode generate() {
 		return generate(value);

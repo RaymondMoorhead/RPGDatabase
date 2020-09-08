@@ -33,6 +33,7 @@ public class UserCharacterController {
     public void createTestCharacter() {
     	TestData.createTestCharacter(service);
     }
+    // END DEBUG END DEBUG END DEBUG END DEBUG END DEBUG END DEBUG END DEBUG 
 	
 	@GetMapping(value = "/list-user-characters")
 	public String showCharactersPage(ModelMap model, HttpSession session){

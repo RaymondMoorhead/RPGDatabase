@@ -8,12 +8,21 @@
 <title>RPG Database ${curUser.username}'s Characters</title>
 </head>
 
+<p id = "demo"></p>
+
+<script src="DiceRoll.js"></script>
 <script language="JavaScript">
+	//RollCommand command = new RollCommand();
+
 	function rollDice(givenIndex) {
 		var input = character.features.get(index).selfRoll + character.features.get(index).externalMods;
-		var result = com.rpgdatabase.utility.dice.RollCommand.RollCommand.executeOnce(input);
+		//var result = RollCommand.executeOnce(input);
 		document.getElementById("rollResult" + givenIndex.toString()).innerHTML = result;
 	}
+	document.getElementById("demo").innerHTML = "Hello";
+	document.getElementById("demo").innerHTML = roll("10d20");
+	//RollCommand command = new RollCommand();
+	//document.getElementById("demo").innerHTML = command.executeOnce("1");
 </script>
 
 <body style="width: 90%">

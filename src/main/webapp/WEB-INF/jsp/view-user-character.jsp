@@ -12,17 +12,12 @@
 
 <script src="DiceRoll.js"></script>
 <script language="JavaScript">
-	//RollCommand command = new RollCommand();
-
 	function rollDice(givenIndex) {
 		var input = character.features.get(index).selfRoll + character.features.get(index).externalMods;
-		//var result = RollCommand.executeOnce(input);
-		document.getElementById("rollResult" + givenIndex.toString()).innerHTML = result;
+		var result = roll(input);
+		document.getElementById("demo").innerHTML = "Hello from rollDice(" + givenIndex.toString() + ")";
+		document.getElementById("rollResult" + givenIndex.toString()).innerHTML = "Hello";//result;
 	}
-	document.getElementById("demo").innerHTML = "Hello";
-	document.getElementById("demo").innerHTML = roll("10d20");
-	//RollCommand command = new RollCommand();
-	//document.getElementById("demo").innerHTML = command.executeOnce("1");
 </script>
 
 <body style="width: 90%">
@@ -122,7 +117,10 @@
 								<td><a type="button" class="btn btn-warning"
 									href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
 							</tr>
-							<%++index; %>
+							<%
+								++index;
+								request.setAttribute("index", index);
+							%>
 						</c:forEach>
 					</tbody>
 				</table>

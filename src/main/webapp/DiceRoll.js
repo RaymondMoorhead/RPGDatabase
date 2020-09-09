@@ -43,7 +43,7 @@ function roll(input) {
 	}
 	resultString = resultString.concat(input.substr(lastIndex));
 	
-	return resultString;//math.evaluate(resultString);
+	return eval(resultString);//math.evaluate(resultString);
 };
 
 function parseDice(input) {
@@ -71,8 +71,8 @@ function parseDice(input) {
 		
 	// lock-in the result
 	var result = 0;
-	for(var i = 0; i < size; ++i)
+	for(var i = 0; i < quantity; ++i)
 		result += Math.floor(Math.random() * size) + 1;
 
-	return result;
+	return result;//result;
 };

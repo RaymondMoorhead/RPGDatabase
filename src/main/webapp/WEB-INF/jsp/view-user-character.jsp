@@ -8,15 +8,11 @@
 <title>RPG Database ${curUser.username}'s Characters</title>
 </head>
 
-<p id = "demo"></p>
-
 <script src="DiceRoll.js"></script>
 <script language="JavaScript">
-	function rollDice(givenIndex) {
-		var input = character.features.get(index).selfRoll + character.features.get(index).externalMods;
-		var result = roll(input);
-		document.getElementById("demo").innerHTML = "Hello from rollDice(" + givenIndex.toString() + ")";
-		document.getElementById("rollResult" + givenIndex.toString()).innerHTML = "Hello";//result;
+	function rollDice(index, internal, external) {
+		var input = internal + ' + ' + external;
+		document.getElementById("rollResult" + index.toString()).innerHTML = roll(input);
 	}
 </script>
 
@@ -46,7 +42,7 @@
 		<c:when test="${editBio != null}">
 			<form method = "post" action="/edit-user-character-bio">
 				<input type = "hidden" name = "id" value="${character.id}">
-				<textarea name = "bio" id="edited" style="width: 100%">${character.bio}</textarea><br>
+				<textarea name = "bio" id="editedBio" style="width: 100%">${character.bio}</textarea><br>
 				<input type = "submit" value = "Save" name = "b1">
 			</form>
 		</c:when>
@@ -71,14 +67,14 @@
 				<table border="1">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Description</th>
-							<th>Roll</th>
-							<th>External Modifiers</th>
-							<th>Roll</th>
-							<th>Roll Result</th>
-							<th></th>
-							<th></th>
+							<th width = "10%">Name</th>
+							<th width = "50%">Description</th>
+							<th width = "14%">Roll</th>
+							<th width = "14%">External Modifiers</th>
+							<th width = "3%">Roll</th>
+							<th width = "3%">Roll Result</th>
+							<th width = "3%"></th>
+							<th width = "3%"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -98,17 +94,17 @@
 										<td><input type = "text" name = "name" value="${feat.name}"></td>
 										<td><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
 										<td><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
-										<td>${feat.externalMods}</td>
-										<td><button type="button" onclick="rollDice(${index})">Roll</button></td>
+										<td>TBF</td>
+										<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
 										<td><p id = "rollResult${index}">0</p></td>
 										<td><input type = "submit" value = "Save" name = "b1"></td>
 									</c:when>
 									<c:otherwise>
 										<td>${feat.name}</td>
 										<td>${feat.description}</td>
-										<td>${feat.selfRoll}</td>
-										<td>${feat.externalMods}</td>
-										<td><button type="button" onclick="rollDice(${index})">Roll</button></td>
+										<td>${feat.selfRoll} + ${feat.externalMods}</td>
+										<td>TBF</td>
+										<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
 										<td><p id = "rollResult${index}">0</p></td>
 										<td><a type="button" class="btn btn-success"
 											href="/edit-user-character-feat?id=${character.id}&index=${index}">Edit</a></td>
@@ -136,8 +132,17 @@
 	
 	<script src="JsUtility.js"></script>
 	<script>
-		textAreaAdjust(document.getElementById("editedDesc"));
-		textAreaAdjust(document.getElementById("editedSelfRoll");
+		let toEdit = document.getElementById("editedBio");
+		if(toEdit !== null)
+			textAreaAdjust(toEdit);
+		
+		toEdit = document.getElementById("editedDesc");
+		if(toEdit !== null)
+			textAreaAdjust(toEdit);
+		
+		toEdit = document.getElementById("editedSelfRoll");
+		if(toEdit !== null)
+			textAreaAdjust(toEdit);
 	</script>
 	
 </body>

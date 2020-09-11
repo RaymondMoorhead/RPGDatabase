@@ -79,7 +79,7 @@ public class UserCharacter {
 				for(String target : mod.second) {
 					featMod = featModStore.get(target);
 					if(featMod == null)
-						featModStore.put(features.get(i).name, featMod = new StringBuilder());
+						featModStore.put(target, featMod = new StringBuilder());
 					featMod.append(featMod.length() == 0 ? mod.first : " + " + mod.first);
 				}
 			}

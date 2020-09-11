@@ -37,7 +37,7 @@ public class TestData {
 		// add the features
 		character.addFeature("Attack", "Attempt to strike your enemy with some weapon", "1d20");
 		character.addFeature("Spear Attack", "Attempt to strike your enemy with your spear", "1d20");
-		character.addFeature("+1 Spear", "Stab with your magical spear", "1d8").addOutRoll("1", "Spear Attack");
+		character.addFeature("+1 Spear", "Stab with your magical spear", "1d8 + 1").addOutRoll("1", "Spear Attack");
 		character.addFeature("Bite", " Your fanged maw is a natural weapon, which you can use to make unarmed strikes. If you hit with it, you deal piercing damage equal to 1d6 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike. ", "1d6");
 		character.addFeature("Armor Class", "Your ability to evade or deflect blows", "10");
 		character.addFeature("Shield", "A simple shield of bone and leather which offers basic protection", "").addOutRoll("2", "Armor Class");
@@ -64,6 +64,7 @@ public class TestData {
 				"18-Legion of One\r\n" + 
 				"19-[Shield Master]\r\n" + 
 				"20-++Extra Attack", "");
+		character.addFeature("Fighter: Echo Knight", "A martial master, taught how to summon and use echoes, the otherwise lost remnants of unprogressed timelines", "").addOutRoll("6", "Second Wind");
 		character.addFeature("Spear Mastery", "You gain a +1 bonus to attack rolls you make with a spear.\r\n" + 
 				"\r\n" + 
 				"When you use a spear, its damage die changes from a d6 to a d8, and from a d8 to a d10 when wielded with two hands. (This benefit has no effect if another feature has already improved the weapon’s die.)\r\n" + 

@@ -12,7 +12,7 @@ import com.rpgdatabase.utility.dice.RollCommand;
 public class Feat {
 	public String name;
 	public String description;
-	public String selfRoll;
+	public String selfRoll = null;
 	@Transient
 	public String externalMods = null;
 	@Transient
@@ -86,11 +86,12 @@ public class Feat {
 	public void setOutRoll(List<Pair<String, List<String>>> outRoll) {
 		this.outRoll = outRoll;
 	}
-	public void addOutRoll(String rollCommand, String... targetFeatures) {
+	public Feat addOutRoll(String rollCommand, String... targetFeatures) {
 		Pair<String, List<String> > pair = new Pair<String, List<String> >();
 		pair.first = rollCommand;
 		pair.second = new ArrayList<String>();
 		Collections.addAll(pair.second, targetFeatures);
 		outRoll.add(pair);
+		return this;
 	}
 }

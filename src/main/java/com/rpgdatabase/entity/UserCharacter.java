@@ -52,8 +52,10 @@ public class UserCharacter {
 		this.bio = bio;
 	}
 	
-	public void addFeature(String name, String description, String selfRoll) {
-		features.add(new Feat(name, description, selfRoll));
+	public Feat addFeature(String name, String description, String selfRoll) {
+		Feat result = new Feat(name, description, selfRoll);
+		features.add(result);
+		return result;
 	}
 	
 	public void changeFeature(int index, String name, String description, String selfRoll) {

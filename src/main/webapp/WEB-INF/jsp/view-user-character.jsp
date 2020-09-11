@@ -69,12 +69,13 @@
 						<tr>
 							<th width = "10%">Name</th>
 							<th width = "50%">Description</th>
-							<th width = "14%">Roll</th>
-							<th width = "14%">External Modifiers</th>
+							<th width = "10%">Self Roll</th>
+							<th width = "7%">External Modifiers</th>
+							<th width = "14%">External Targets</th>
 							<th width = "3%">Roll</th>
-							<th width = "3%">Roll Result</th>
-							<th width = "3%"></th>
-							<th width = "3%"></th>
+							<th width = "2%">Roll Result</th>
+							<th width = "2%"></th>
+							<th width = "2%"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -83,36 +84,143 @@
 							// unknown reason, so now I need to manually create my own
 							// index tracker
 							int index = 0;
+							boolean firstOutRollIndex = true;
+							boolean firstOutTargetIndex = true;
 							request.setAttribute("index", index);
+							request.setAttribute("firstOutRollIndex", firstOutRollIndex);
+							request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
 						%>
 						<c:forEach items="${character.features}" var="feat">
-							<tr>
+								<%
+									firstOutRollIndex = true;
+									request.setAttribute("firstOutRollIndex", firstOutRollIndex);
+								%>
 								<c:choose>
 									<c:when test="${editFeat == index}">
 										<input type = "hidden" name = "id" value="${character.id}">
 										<input type = "hidden" name = "index" value="${index}">
-										<td><input type = "text" name = "name" value="${feat.name}"></td>
-										<td><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
-										<td><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
-										<td>TBF</td>
-										<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
-										<td><p id = "rollResult${index}">0</p></td>
-										<td><input type = "submit" value = "Save" name = "b1"></td>
+										<c:choose>
+											<c:when test="${fn:length(feat.outRoll) == 0}">
+												<tr>
+													<td><input type = "text" name = "name" value="${feat.name}"></td>
+													<td><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
+													<td><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
+													<td>No External Modifiers</td>
+													<td>No External Targets</td>
+													<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
+													<td><p id = "rollResult${index}">0</p></td>
+													<td><input type = "submit" value = "Save" name = "b1"></td>
+													<td><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
+												</tr>
+											</c:when>
+											<c:otherwise>
+												<c:forEach items="${feat.outRoll}" var="outRoll">
+												<%
+													firstOutTargetIndex = true;
+													request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+												%>
+												<c:forEach items="${outRoll.second}" var="targetFeat">
+													<c:choose>
+														<c:when test="${firstOutRollIndex}">
+															<tr>
+																<td rowspan="${featRows[index]}"><input type = "text" name = "name" value="${feat.name}"></td>
+																<td rowspan="${featRows[index]}"><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
+																<td rowspan="${featRows[index]}"><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
+																<td rowspan="${fn:length(outRoll.second)}">${outRoll.first}</td>
+																<td>${targetFeat}</td>
+																<td rowspan="${featRows[index]}"><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
+																<td rowspan="${featRows[index]}"><p id = "rollResult${index}">0</p></td>
+																<td rowspan="${featRows[index]}"><input type = "submit" value = "Save" name = "b1"></td>
+																<td rowspan="${featRows[index]}"><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
+																<%
+																	firstOutRollIndex = false;
+																	firstOutTargetIndex = false;
+																	request.setAttribute("firstOutRollIndex", firstOutRollIndex);
+																	request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+																%>
+															</tr>
+														</c:when>
+														<c:when test="${firstOutTargetIndex}">
+															<tr>
+																<td rowspan="${fn:length(outRoll.second)}">${outRoll.first}</td>
+																<td>${targetFeat}</td>
+																<%
+																	firstOutTargetIndex = false;
+																	request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+																%>
+															</tr>
+														</c:when>
+														<c:otherwise>
+															<tr><td>${targetFeat}</td></tr>
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
+												</c:forEach>
+											</c:otherwise>
+										</c:choose>
 									</c:when>
 									<c:otherwise>
-										<td>${feat.name}</td>
-										<td>${feat.description}</td>
-										<td>${feat.selfRoll} + ${feat.externalMods}</td>
-										<td>TBF</td>
-										<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
-										<td><p id = "rollResult${index}">0</p></td>
-										<td><a type="button" class="btn btn-success"
-											href="/edit-user-character-feat?id=${character.id}&index=${index}">Edit</a></td>
+										<c:choose>
+											<c:when test="${fn:length(feat.outRoll) == 0}">
+												<tr>
+													<td>${feat.name}</td>
+													<td>${feat.description}</td>
+													<td>${feat.selfRoll} + ${feat.externalMods}</td>
+													<td>No External Modifiers</td>
+													<td>No External Targets</td>
+													<td><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
+													<td><p id = "rollResult${index}">0</p></td>
+													<td rowspan="${featRows[index]}"><a type="button" class="btn btn-success" href="/edit-user-character-feat?id=${character.id}&index=${index}">Edit</a></td>
+													<td><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
+												</tr>
+											</c:when>
+											<c:otherwise>
+												<c:forEach items="${feat.outRoll}" var="outRoll">
+													<%
+														firstOutTargetIndex = true;
+														request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+													%>
+													<c:forEach items="${outRoll.second}" var="targetFeat">
+														<c:choose>
+															<c:when test="${firstOutRollIndex}">
+																<tr>
+																	<td rowspan="${featRows[index]}">${feat.name}</td>
+																	<td rowspan="${featRows[index]}">${feat.description}</td>
+																	<td rowspan="${featRows[index]}">${feat.selfRoll} + ${feat.externalMods}</td>
+																	<td rowspan="${fn:length(outRoll.second)}">${outRoll.first}</td>
+																	<td>${targetFeat}</td>
+																	<td rowspan="${featRows[index]}"><button type="button" onclick="rollDice(${index}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
+																	<td rowspan="${featRows[index]}"><p id = "rollResult${index}">0</p></td>
+																	<td rowspan="${featRows[index]}"><a type="button" class="btn btn-success" href="/edit-user-character-feat?id=${character.id}&index=${index}">Edit</a></td>
+																	<td rowspan="${featRows[index]}"><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
+																	<%
+																		firstOutRollIndex = false;
+																		firstOutTargetIndex = false;
+																		request.setAttribute("firstOutRollIndex", firstOutRollIndex);
+																		request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+																	%>
+																</tr>
+															</c:when>
+															<c:when test="${firstOutTargetIndex}">
+																<tr>
+																	<td rowspan="${fn:length(outRoll.second)}">${outRoll.first}</td>
+																	<td>${targetFeat}</td>
+																	<%
+																		firstOutTargetIndex = false;
+																		request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
+																	%>
+																</tr>
+															</c:when>
+															<c:otherwise>
+																<tr><td>${targetFeat}</td></tr>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
+												</c:forEach>
+											</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 								</c:choose>
-								<td><a type="button" class="btn btn-warning"
-									href="/delete-user-character-feat?id=${character.id}&index=${index}">Delete</a></td>
-							</tr>
 							<%
 								++index;
 								request.setAttribute("index", index);

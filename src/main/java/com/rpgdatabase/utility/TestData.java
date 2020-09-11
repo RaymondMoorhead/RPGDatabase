@@ -35,14 +35,18 @@ public class TestData {
 		character = service.createCharacter(testUsername, testCharName, testCharBio);
 		
 		// add the features
-		character.addFeature("Spear", "Stab with your spear", "1d20");
+		character.addFeature("Attack", "Attempt to strike your enemy with some weapon", "1d20");
+		character.addFeature("Spear Attack", "Attempt to strike your enemy with your spear", "1d20");
+		character.addFeature("+1 Spear", "Stab with your magical spear", "1d8").addOutRoll("1", "Spear Attack");
 		character.addFeature("Bite", " Your fanged maw is a natural weapon, which you can use to make unarmed strikes. If you hit with it, you deal piercing damage equal to 1d6 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike. ", "1d6");
+		character.addFeature("Armor Class", "Your ability to evade or deflect blows", "10");
+		character.addFeature("Shield", "A simple shield of bone and leather which offers basic protection", "").addOutRoll("2", "Armor Class");
 		character.addFeature("Ability Scores", "STR: 666+2(6th ASI)\r\n" + 
 				"DEX: 554\r\n" + 
 				"CON: 655+2(Race)\r\n" + 
 				"INT: 433\r\n" + 
 				"WIS:443+1(Race)\r\n" + 
-				"CHA: 222", "");
+				"CHA: 222", "").addOutRoll("5", "Attack", "Spear Attack", "+1 Spear", "Bite").addOutRoll("2", "Armor Class");
 		character.addFeature("Progression", "4-[Spear Mastery]\r\n" + 
 				"5-Extra Attack\r\n" + 
 				"6-[+2STR]\r\n" + 
@@ -60,14 +64,14 @@ public class TestData {
 				"18-Legion of One\r\n" + 
 				"19-[Shield Master]\r\n" + 
 				"20-++Extra Attack", "");
-		character.addFeature("Spear Mastery", "• You gain a +1 bonus to attack rolls you make with a spear.\r\n" + 
+		character.addFeature("Spear Mastery", "You gain a +1 bonus to attack rolls you make with a spear.\r\n" + 
 				"\r\n" + 
-				"• When you use a spear, its damage die changes from a d6 to a d8, and from a d8 to a d10 when wielded with two hands. (This benefit has no effect if another feature has already improved the weapon’s die.)\r\n" + 
+				"When you use a spear, its damage die changes from a d6 to a d8, and from a d8 to a d10 when wielded with two hands. (This benefit has no effect if another feature has already improved the weapon’s die.)\r\n" + 
 				"\r\n" + 
-				"• You can set your spear to receive a charge. As a bonus action, choose a creature you can see that is at least 20 feet away from you. If that creatures moves within your spear’s reach on its next turn, you can make a melee attack against it with your spear as a reaction. If the attack hits, the target takes an extra 1d8 piercing damage, or an extra 1d10 piercing damage if you wield the spear with two hands. You can’t use this ability if the creature used the Disengage action before moving.\r\n" + 
+				"You can set your spear to receive a charge. As a bonus action, choose a creature you can see that is at least 20 feet away from you. If that creatures moves within your spear’s reach on its next turn, you can make a melee attack against it with your spear as a reaction. If the attack hits, the target takes an extra 1d8 piercing damage, or an extra 1d10 piercing damage if you wield the spear with two hands. You can’t use this ability if the creature used the Disengage action before moving.\r\n" + 
 				"\r\n" + 
-				"• As a bonus action on your turn, you can increase your reach with a spear by 5 feet for the rest of your turn.", "");
-		character.addFeature("Fighting Style: Dueling", "When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon", "");
+				"As a bonus action on your turn, you can increase your reach with a spear by 5 feet for the rest of your turn.", "").addOutRoll("1", "Spear Attack");
+		character.addFeature("Fighting Style: Dueling", "When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon", "").addOutRoll("2", "+1 Spear");
 		character.addFeature("Second Wind", "You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. \r\n" + 
 				"\r\n" + 
 				"Once you use this feature, you must finish a short or long rest before you can use it again.\r\n" + 
@@ -91,7 +95,7 @@ public class TestData {
 				"\r\n" + 
 				"Chose: Perception, Survival", "");
 		character.addFeature("Natural Armor", " You have tough, scaly skin. When you\r\n" + 
-				"aren't wearing armor, your AC is 13 + your Dexterity modifier. You can use your natural armor to determine your AC if the armor you wear would leave you with a lower AC. A shield's benefits apply as normal while you use your natural armor. ", "");
+				"aren't wearing armor, your AC is 13 + your Dexterity modifier. You can use your natural armor to determine your AC if the armor you wear would leave you with a lower AC. A shield's benefits apply as normal while you use your natural armor. ", "").addOutRoll("3", "Armor Class");
 		
 		character.addFeature("Wanderer", "  You have an excellent memory for maps and geography, and you can always recall the general layout of terrain, settlements, and other features around you. In addition, you can find food and fresh water for yourself and up to five other people each day, provided that the land offers berries, small game, water, and so forth.\r\n" + 
 				"", "");

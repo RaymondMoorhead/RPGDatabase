@@ -67,7 +67,7 @@ public class UserCharacterController {
 	public String viewCharacter(ModelMap model, @RequestParam String id){
 		UserCharacter character = service.getCharacter(id);
 		formatBio(character);
-		formatFeats(character);
+		formatFeats(model, character);
 		model.put("character", character);
 		return "view-user-character";
 	}
@@ -76,7 +76,7 @@ public class UserCharacterController {
 	public String addCharacterFeat(ModelMap model, @RequestParam String id){
 		UserCharacter character = service.getCharacter(id);
 		formatBio(character);
-		formatFeats(character);
+		formatFeats(model, character);
 		character.addFeature("", "", "");
 		model.put("character", character);
 		model.put("editFeat", character.features.size() - 1);
@@ -87,7 +87,7 @@ public class UserCharacterController {
 	public String editCharacterName(ModelMap model,  @RequestParam String id){
 		UserCharacter character = service.getCharacter(id);
 		formatBio(character);
-		formatFeats(character);
+		formatFeats(model, character);
 		model.put("character", character);
 		model.put("editName", true);
 		return "view-user-character";
@@ -104,7 +104,7 @@ public class UserCharacterController {
 	@GetMapping(value = "/edit-user-character-bio")
 	public String editCharacterBio(ModelMap model,  @RequestParam String id){
 		UserCharacter character = service.getCharacter(id);
-		formatFeats(character);
+		formatFeats(model, character);
 		model.put("character", character);
 		model.put("editBio", true);
 		return "view-user-character";
@@ -122,7 +122,7 @@ public class UserCharacterController {
 	public String editCharacterFeat(ModelMap model,  @RequestParam String id, @RequestParam int index){
 		UserCharacter character = service.getCharacter(id);
 		formatBio(character);
-		formatFeats(character, index);
+		formatFeats(model, character, index);
 		model.put("character", character);
 		model.put("editFeat", index);
 		return "view-user-character";
@@ -155,13 +155,24 @@ public class UserCharacterController {
 		character.bio = HtmlUtility.formatForTextArea(character.bio);
 	}
 	
-	private void formatFeats(UserCharacter character) {
-		formatFeats(character, -1);
+	private void formatFeats(ModelMap model, UserCharacter character) {
+		formatFeats(model, character, -1);
 	}
 	
-	private void formatFeats(UserCharacter character, int exceptThisFeatIndex) {
+	private void formatFeats(ModelMap model, UserCharacter character, int exceptThisFeatIndex) {
 		character.compileFeatureMods();
+		int totalRows;
+		int[] featRows = new int[character.features.size()];
 		for(int i = 0; i < character.features.size(); ++i){
+			
+			// count the total number rows necessary
+			totalRows = 0;
+			for(int j = 0; j < character.features.get(i).outRoll.size(); ++j)
+				totalRows += character.features.get(i).outRoll.get(j).second.size();
+			if(totalRows == 0)
+				totalRows = 1;
+			featRows[i] = totalRows;
+			
 			// ignore formatting a feat (because it' being edited)
 			if(i == exceptThisFeatIndex)
 				continue;
@@ -169,7 +180,6 @@ public class UserCharacterController {
 			// handle feat formatting
 			character.features.get(i).description = HtmlUtility.formatForTextArea(character.features.get(i).getDescription());
 		}
-		
-
+		model.addAttribute("featRows", featRows);
 	}
 }

@@ -94,4 +94,16 @@ public class Feat {
 		outRoll.add(pair);
 		return this;
 	}
+	
+	public Feat addOutRoll(List<Pair<String, List<String>>> newOutRoll) {
+		for(int i = 0; i < newOutRoll.size(); ++i) {
+			if(newOutRoll.get(i) != null) {
+				if(i >= outRoll.size())
+					outRoll.add(newOutRoll.get(i));
+				else
+					outRoll.get(i).second.addAll(newOutRoll.get(i).second);
+			}
+		}
+		return this;
+	}
 }

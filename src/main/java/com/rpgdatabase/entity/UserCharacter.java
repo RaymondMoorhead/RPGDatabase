@@ -45,11 +45,20 @@ public class UserCharacter {
 		return features;
 	}
 	
+	public void setId(String id) {
+		this.id = id;
+	}
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
 	public void setName(String name) {
 		this.name = name;
 	}
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+	public void setFeatures(List<Feat> features) {
+		this.features = features;
 	}
 	
 	public Feat addFeature(String name, String description, String selfRoll) {
@@ -58,11 +67,12 @@ public class UserCharacter {
 		return result;
 	}
 	
-	public void changeFeature(int index, String name, String description, String selfRoll) {
+	public Feat changeFeature(int index, String name, String description, String selfRoll) {
 		Feat feat = features.get(index);
 		feat.name = name;
 		feat.description = description;
 		feat.selfRoll = selfRoll;
+		return feat;
 	}
 	
 	public void removeFeature(int index) {

@@ -70,6 +70,7 @@
 							// index tracker
 							int featIndex = 0;
 							int outRollIndex = -1;
+							int outRollTargetIndex = -1;
 							boolean firstOutRollIndex;
 							boolean firstOutTargetIndex = true;
 							request.setAttribute("featIndex", featIndex);
@@ -100,7 +101,7 @@
 									<c:when test="${editFeat == featIndex}">
 										<input type = "hidden" name = "id" value="${character.id}">
 										<input type = "hidden" name = "index" value="${featIndex}">
-										<input type = "hidden" name = "newExternalRolls" value="${newExternalRolls}">
+										<input type = "hidden" name = "outRollIndex" id="outRollIndex" value="">
 										<c:choose>
 											<c:when test="${fn:length(feat.outRoll) == 0}">
 												<tr>
@@ -120,17 +121,26 @@
 														firstOutTargetIndex = true;
 														request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
 														++outRollIndex;
+														request.setAttribute("outRollIndex", outRollIndex);
+														outRollTargetIndex = -1;
 													%>
+													<input type = "hidden" name = "outRollIndex" value="${outRollIndex}">
 													
 													<c:forEach items="${outRoll.second}" var="targetFeat">
+													<%
+														++outRollTargetIndex;
+														request.setAttribute("outRollTargetIndex", outRollTargetIndex);
+													%>
 														<c:choose>
 															<c:when test="${firstOutRollIndex}">
 																<tr>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><input type = "text" name = "name" value="${feat.name}"></td>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
-																	<td rowspan="${fn:length(outRoll.second) + 1}">${outRoll.first}</td>
-																	<td>${targetFeat}</td>
+																	<!-- <td rowspan="${fn:length(outRoll.second) + 1}">${outRoll.first}</td> -->
+																	<td rowspan="${fn:length(outRoll.second) + 1}"><textarea name = "${outRollIndex}" class="fill-cell" id="${outRollIndex}" style="overflow:hidden">${outRoll.first}</textarea></td>
+																	<!-- <td>${targetFeat}</td>  -->
+																	<td><textarea name = "${outRollIndex}_${outRollTargetIndex}" class="fill-cell" id="${outRollIndex}_${outRollTargetIndex}" style="overflow:hidden">${targetFeat}</textarea></td>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><button type="button" onclick="rollDice(${featIndex}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><p id = "rollResult${featIndex}">0</p></td>
 																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><input type = "button" onclick="setFormSave()" value = "Save" name = "b1"></td>
@@ -145,8 +155,10 @@
 															</c:when>
 															<c:when test="${firstOutTargetIndex}">
 																<tr>
-																	<td rowspan="${fn:length(outRoll.second) + 1}">${outRoll.first}</td>
-																	<td>${targetFeat}</td>
+																	<!-- <td rowspan="${fn:length(outRoll.second) + 1}">${outRoll.first}</td> -->
+																	<td rowspan="${fn:length(outRoll.second) + 1}"><textarea name = "${outRollIndex}" class="fill-cell" id="${outRollIndex}" style="overflow:hidden">${outRoll.first}</textarea></td>
+																	<!-- <td>${targetFeat}</td>  -->
+																	<td><textarea name = "${outRollIndex}_${outRollTargetIndex}" class="fill-cell" id="${outRollIndex}_${outRollTargetIndex}" style="overflow:hidden">${targetFeat}</textarea></td>
 																	<%
 																		firstOutTargetIndex = false;
 																		request.setAttribute("firstOutTargetIndex", firstOutTargetIndex);
@@ -154,11 +166,12 @@
 																</tr>
 															</c:when>
 															<c:otherwise>
-																<tr><td>${targetFeat}</td></tr>
+																<!-- <tr><td>${targetFeat}</td></tr> -->
+																<tr><td><textarea name = "${outRollIndex}_${outRollTargetIndex}" class="fill-cell" id="${outRollIndex}_${outRollTargetIndex}" style="overflow:hidden">${targetFeat}</textarea></td></tr>
 															</c:otherwise>
 														</c:choose>
 													</c:forEach>
-													<tr><td><input type = "button" onclick="setFormAddTarget()" value = "Add Target" name = "b3"></td><tr>
+													<tr><td><input type = "button" onclick="setFormAddTarget(${outRollIndex})" value = "Add Target" name = "b3"></td><tr>
 												</c:forEach>
 												<tr><td colspan="2"><input type = "button" onclick="setFormAddRoll()" value = "Add External Modifier" name = "b2"></td><tr>
 											</c:otherwise>
@@ -266,8 +279,9 @@
 			form.action = "/add-roll-to-user-character-feat";
 			form.submit();
 		}
-		function setFormAddTarget() {
+		function setFormAddTarget(index) {
 			form.action = "/add-target-to-user-character-feat";
+			form.getElementById("outRollIndex").value = index;
 			form.submit();
 		}
 	</script>

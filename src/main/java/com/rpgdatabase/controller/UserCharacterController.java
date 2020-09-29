@@ -135,13 +135,21 @@ public class UserCharacterController {
 	}
 	
 	@PostMapping(value = "/add-roll-to-user-character-feat")
-	public String addRollToFeat(ModelMap model, @RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc, @RequestParam String selfRoll){
+	public String addRollToFeat(ModelMap model, @RequestParam Map<String, String> requestParams) {//@RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc, @RequestParam String selfRoll){
+		// extract parameters
+		String id = (String) 					requestParams.remove("id");
+		int index = Integer.parseInt(			requestParams.remove("index"));
+		String name = (String) 					requestParams.remove("name");
+		String desc = (String) 					requestParams.remove("desc");
+		String selfRoll = (String) 				requestParams.remove("selfRoll");
+		
 		UserCharacter character = service.getCharacter(id);
 		Feat editedFeat;
 		if(index == character.features.size())
 			editedFeat = character.addFeature(name, desc, selfRoll); // must be a new feature
 		else
 			editedFeat = character.changeFeature(index, name, desc, selfRoll);
+		setOutrolls(editedFeat, requestParams);
 		editedFeat.addOutRoll("1d20", "[Target Feat]");
 		
 		formatBio(character);
@@ -153,13 +161,22 @@ public class UserCharacterController {
 	}
 	
 	@PostMapping(value = "/add-target-to-user-character-feat")
-	public String addTargetToFeat(ModelMap model, @RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc, @RequestParam String selfRoll, @RequestParam int outRollIndex){
+	public String addTargetToFeat(ModelMap model, @RequestParam Map<String, String> requestParams) {//@RequestParam String id, @RequestParam int index, @RequestParam String name, @RequestParam String desc, @RequestParam String selfRoll, @RequestParam int outRollIndex){
+		// extract parameters
+		String id = (String) 					requestParams.remove("id");
+		int index = Integer.parseInt(			requestParams.remove("index"));
+		String name = (String) 					requestParams.remove("name");
+		String desc = (String) 					requestParams.remove("desc");
+		String selfRoll = (String) 				requestParams.remove("selfRoll");
+		int outRollIndex  = Integer.parseInt(	requestParams.remove("outRollIndex"));
+		
 		UserCharacter character = service.getCharacter(id);
 		Feat editedFeat;
 		if(index == character.features.size())
 			editedFeat = character.addFeature(name, desc, selfRoll); // must be a new feature
 		else
 			editedFeat = character.changeFeature(index, name, desc, selfRoll);
+		setOutrolls(editedFeat, requestParams);
 		editedFeat.outRoll.get(outRollIndex).second.add("[Target Feat]");
 
 		formatBio(character);
@@ -203,12 +220,13 @@ public class UserCharacterController {
 	// PRIVATE HELPER METHODS
 	
 	private void setOutrolls(Feat feat, Map<String,String> mixedRollsTargets) {
-		// we expect that only the outrolls and targets are in th given map,
+		// we expect that only the outrolls and targets are in the given map,
 		// and that they are labeled as follows:
 		// # = outRoll
 		// #_# = target of outroll
 		int outRollIndex;
 		int targetIndex;
+		System.out.println(mixedRollsTargets.toString());
 		for(Map.Entry<String, String> entry : mixedRollsTargets.entrySet()) {
 			
 			// it's a target
@@ -226,9 +244,11 @@ public class UserCharacterController {
 			}
 			// if it's an outroll
 			else {
+				try {
 				outRollIndex = Integer.parseInt(entry.getKey());
 				fitOutrolls(feat.outRoll, outRollIndex);
 				feat.outRoll.get(outRollIndex).first = entry.getValue();
+				} catch(NumberFormatException e) {/*not an outroll*/};
 			}
 		}
 	}
@@ -236,7 +256,7 @@ public class UserCharacterController {
 	private void fitOutrolls(List<Pair<String, List<String>>> outRoll, int index) {
 		// make sure there is space for it
 		Pair<String, List<String>> curData;
-		while(index < outRoll.size()) {
+		while(index >= outRoll.size()) {
 			curData = new Pair<String, List<String>>();
 			curData.second = new ArrayList<String>();
 			outRoll.add(curData);
@@ -245,7 +265,7 @@ public class UserCharacterController {
 	
 	private void fitTargets(List<String> targets, int index) {
 		// make sure there is space for it
-		while(index < targets.size())
+		while(index >= targets.size())
 			targets.add("");
 	}
 	

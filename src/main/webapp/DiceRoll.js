@@ -5,6 +5,7 @@ function roll(input) {
 	var nextDice = input.indexOf('d');
 	var resultString = "";
 	var resultDice;
+	
 	while(nextDice != -1)
 	{
 		var startDice = nextDice - 1;
@@ -17,6 +18,11 @@ function roll(input) {
 				--startDice;
 			++startDice
 		}
+		
+		// we know the start, so add in anything
+		// between the last and current dice
+		if(startDice > lastIndex)
+			resultString += input.substring(lastIndex, startDice);
 		
 		var endDice = nextDice + 1;
 		if(endDice == input.length)
@@ -31,7 +37,7 @@ function roll(input) {
 		if(endDice != -1) {
 			resultDice = parseDice(input.substring(startDice, endDice));
 			if(resultDice !== false)
-				resultString = resultString.concat(resultDice);
+				resultString += resultDice;
 			else
 				resultString = resultString.concat(input.substring(startDice, endDice));
 			lastIndex = endDice;
@@ -41,8 +47,9 @@ function roll(input) {
 		++nextDice;
 		nextDice = input.indexOf('d', nextDice);
 	}
-	resultString = resultString.concat(input.substr(lastIndex));
+	// DEBUG: THE PROBLEM IS THAT THE ROLLED VALUES ARE ADJACENT SO IT READS THEM AS ONE NUMBER
 	
+	resultString = resultString.concat(input.substr(lastIndex));
 	return eval(resultString);//math.evaluate(resultString);
 };
 

@@ -134,17 +134,17 @@
 														<c:choose>
 															<c:when test="${firstOutRollIndex}">
 																<tr>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><input type = "text" name = "name" value="${feat.name}"></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><input type = "text" name = "name" value="${feat.name}"></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><textarea name = "desc" class="fill-cell" id="editedDesc" style="overflow:hidden">${feat.description}</textarea></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><textarea name = "selfRoll" class="fill-cell" id="editedSelfRoll" style="overflow:hidden">${feat.selfRoll}</textarea></td>
 																	<!-- <td rowspan="${fn:length(outRoll.second) + 1}">${outRoll.first}</td> -->
 																	<td rowspan="${fn:length(outRoll.second) + 1}"><textarea name = "${outRollIndex}" class="fill-cell" id="${outRollIndex}" style="overflow:hidden">${outRoll.first}</textarea></td>
 																	<!-- <td>${targetFeat}</td>  -->
 																	<td><textarea name = "${outRollIndex}_${outRollTargetIndex}" class="fill-cell" id="${outRollIndex}_${outRollTargetIndex}" style="overflow:hidden">${targetFeat}</textarea></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><button type="button" onclick="rollDice(${featIndex}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><p id = "rollResult${featIndex}">0</p></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><input type = "button" onclick="setFormSave()" value = "Save" name = "b1"></td>
-																	<td rowspan="${featRows[featIndex] + fn:length(outRoll.second) + 2}"><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${featIndex}">Delete</a></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><button type="button" onclick="rollDice(${featIndex}, '${feat.selfRoll}', '${feat.externalMods}')">Roll</button></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><p id = "rollResult${featIndex}">0</p></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><input type = "button" onclick="setFormSave()" value = "Save" name = "b1"></td>
+																	<td rowspan="${featRows[featIndex] + fn:length(feat.outRoll) + 1}"><a type="button" class="btn btn-warning" href="/delete-user-character-feat?id=${character.id}&index=${featIndex}">Delete</a></td>
 																	<%
 																		firstOutRollIndex = false;
 																		firstOutTargetIndex = false;
@@ -281,7 +281,7 @@
 		}
 		function setFormAddTarget(index) {
 			form.action = "/add-target-to-user-character-feat";
-			form.getElementById("outRollIndex").value = index;
+			document.getElementById("outRollIndex").value = index;
 			form.submit();
 		}
 	</script>

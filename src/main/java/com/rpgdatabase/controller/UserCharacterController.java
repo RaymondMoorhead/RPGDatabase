@@ -226,7 +226,6 @@ public class UserCharacterController {
 		// #_# = target of outroll
 		int outRollIndex;
 		int targetIndex;
-		System.out.println(mixedRollsTargets.toString());
 		for(Map.Entry<String, String> entry : mixedRollsTargets.entrySet()) {
 			
 			// it's a target
@@ -237,7 +236,7 @@ public class UserCharacterController {
 				
 				// grow the containers if necessary
 				fitOutrolls(feat.outRoll, outRollIndex);
-				fitTargets(feat.outRoll.get(targetIndex).second, targetIndex);
+				fitTargets(feat.outRoll.get(outRollIndex).second, targetIndex);
 				
 				// now add it in
 				feat.outRoll.get(outRollIndex).second.set(targetIndex, entry.getValue());
